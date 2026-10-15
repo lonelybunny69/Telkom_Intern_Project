@@ -1,0 +1,26 @@
+﻿# SQLite database (dikelola Railway Volume, bukan Git)
+*.db
+*.db-shm
+*.db-wal
+*.backup_*.db
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+.env
+
+# Upload temp
+uploads/
+
+# Frontend build (deploy terpisah ke Vercel)
+frontend/node_modules/
+frontend/.next/
+
+# OS
+.DS_Store
+Thumbs.db
+
+frontend/
