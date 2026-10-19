@@ -15,12 +15,11 @@ venv/
 # Upload temp
 uploads/
 
-# Frontend build (deploy terpisah ke Vercel)
+# Frontend build
 frontend/node_modules/
 frontend/.next/
+frontend/.env*.local
 
 # OS
 .DS_Store
 Thumbs.db
-
-frontend/

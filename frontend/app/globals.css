@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-brand-red: var(--workspace-brand);
+  --color-brand-wine: var(--workspace-wine);
+  --color-workspace-revenue: var(--workspace-revenue);
+  --color-workspace-loss: var(--workspace-loss);
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+
+  body {
+    min-height: 100%;
+    font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  }
+}
+
+@layer components {
+  .workspace-shell {
+    isolation: isolate;
+    background-color: var(--workspace-canvas);
+    background-image:
+      radial-gradient(ellipse 58rem 34rem at 0% -12%, var(--workspace-red-haze), transparent 72%),
+      radial-gradient(ellipse 38rem 28rem at 100% 12%, var(--workspace-wine-haze), transparent 76%);
+    background-attachment: fixed;
+  }
+
+  .workspace-shell[data-theme="dark"] {
+    color-scheme: dark;
+    --workspace-canvas: #180a11;
+    --workspace-foreground: #fff5f6;
+    --workspace-muted: #cbb2bb;
+    --workspace-secondary: #f0dce2;
+    --workspace-panel: #25131c;
+    --workspace-elevated: #2e1923;
+    --workspace-glass-background: linear-gradient(135deg, rgb(255 245 248 / 11%), rgb(130 24 52 / 12%));
+    --workspace-border: rgb(255 226 235 / 14%);
+    --workspace-border-strong: rgb(255 226 235 / 24%);
+    --workspace-input: rgb(15 7 12 / 65%);
+    --workspace-table-header: rgb(21 9 15 / 92%);
+    --workspace-row-hover: rgb(255 245 248 / 5%);
+    --workspace-chip: rgb(255 245 248 / 9%);
+    --workspace-composer: rgb(27 13 20 / 96%);
+    --workspace-brand: #f04452;
+    --workspace-brand-wash: rgb(240 68 82 / 12%);
+    --workspace-wine: #a51f43;
+    --workspace-brand-gradient: linear-gradient(120deg, #b5153d 0%, #ed3346 58%, #f05c61 100%);
+    --workspace-brand-highlight: rgb(255 245 248 / 25%);
+    --workspace-revenue: #34d399;
+    --workspace-revenue-wash: rgb(52 211 153 / 12%);
+    --workspace-loss: #fbbf24;
+    --workspace-loss-wash: rgb(251 191 36 / 12%);
+    --workspace-red-haze: rgb(225 29 72 / 20%);
+    --workspace-wine-haze: rgb(136 19 55 / 16%);
+    --workspace-shadow: rgb(74 11 31 / 26%);
+  }
+
+  .workspace-shell[data-theme="light"] {
+    color-scheme: light;
+    --workspace-canvas: #fff7f8;
+    --workspace-foreground: #35151e;
+    --workspace-muted: #765b63;
+    --workspace-secondary: #51343d;
+    --workspace-panel: rgb(255 255 255 / 90%);
+    --workspace-elevated: #fff0f3;
+    --workspace-glass-background: linear-gradient(135deg, rgb(255 255 255 / 91%), rgb(255 232 237 / 76%));
+    --workspace-border: rgb(144 31 55 / 13%);
+    --workspace-border-strong: rgb(144 31 55 / 23%);
+    --workspace-input: rgb(255 255 255 / 94%);
+    --workspace-table-header: #fff0f3;
+    --workspace-row-hover: rgb(200 30 58 / 5%);
+    --workspace-chip: #f9e7eb;
+    --workspace-composer: rgb(255 255 255 / 95%);
+    --workspace-brand: #c81e3a;
+    --workspace-brand-wash: rgb(200 30 58 / 10%);
+    --workspace-wine: #8f1228;
+    --workspace-brand-gradient: linear-gradient(120deg, #98132d 0%, #c81e3a 58%, #e34857 100%);
+    --workspace-brand-highlight: rgb(255 255 255 / 48%);
+    --workspace-revenue: #047857;
+    --workspace-revenue-wash: rgb(4 120 87 / 10%);
+    --workspace-loss: #a14f08;
+    --workspace-loss-wash: rgb(180 83 9 / 10%);
+    --workspace-red-haze: rgb(244 63 94 / 12%);
+    --workspace-wine-haze: rgb(190 18 60 / 8%);
+    --workspace-shadow: rgb(120 25 45 / 12%);
+  }
+
+  .workspace-glass {
+    background: var(--workspace-glass-background);
+    -webkit-backdrop-filter: blur(18px) saturate(145%);
+    backdrop-filter: blur(18px) saturate(145%);
+    box-shadow: inset 0 1px 0 var(--workspace-brand-highlight), 0 18px 34px -28px var(--workspace-shadow);
+  }
+
+  .workspace-brand-gradient {
+    background: var(--workspace-brand-gradient);
+  }
+
+  .workspace-brand-button {
+    border: 1px solid rgb(255 255 255 / 16%);
+    background: var(--workspace-brand-gradient);
+    color: #fff;
+    box-shadow: inset 0 1px 0 var(--workspace-brand-highlight), 0 8px 20px -15px var(--workspace-shadow);
+    transition: filter 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+  }
+
+  .workspace-brand-button:hover:not(:disabled) {
+    filter: brightness(1.08);
+    box-shadow: inset 0 1px 0 var(--workspace-brand-highlight), 0 10px 24px -14px var(--workspace-shadow);
+  }
+
+  .workspace-brand-button:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  .workspace-brand-button:focus-visible {
+    outline: 2px solid var(--workspace-brand);
+    outline-offset: 2px;
+  }
+}

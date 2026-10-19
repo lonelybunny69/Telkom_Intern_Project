@@ -8,8 +8,9 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
-from fastapi import FastAPI, File, HTTPException, Query, UploadFile
+from fastapi import FastAPI, File, HTTPException, Query, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse, RedirectResponse
 from pydantic import BaseModel, ConfigDict, Field
 
 try:
@@ -48,9 +49,10 @@ logger = logging.getLogger(__name__)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=FRONTEND_ORIGINS,
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=False,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allow_headers=["Content-Type"],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 MAX_UPLOAD_BYTES = 50 * 1024 * 1024
@@ -173,9 +175,12 @@ def _transaction_values(tx: TransactionInput) -> tuple[Any, ...]:
     return tuple(values[column] for column in TRANSACTION_COLUMNS)
 
 
-@app.get("/")
-def root() -> dict[str, str]:
-    return {"status": "Online", "message": "Telkom Revenue Database API Ready"}
+@app.get("/", include_in_schema=False)
+def root(request: Request) -> Any:
+    accept = request.headers.get("accept", "")
+    if "application/json" in accept and "text/html" not in accept:
+        return {"status": "Online", "message": "Telkom Revenue Database API Ready"}
+    return RedirectResponse(url="https://telkom-intern-project.vercel.app", status_code=307)
 
 
 @app.get("/api/health")
