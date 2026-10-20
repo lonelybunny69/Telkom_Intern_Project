@@ -85,7 +85,12 @@ export default function TransactionTable({
             {transactions.map((transaction) => (
               <tr key={transaction.id} className={`transition-colors ${styles.rowHover}`}>
                 <td className={`whitespace-nowrap px-4 py-3 ${styles.muted}`}>{transaction.tahun ?? "—"} · {transaction.bulan || "—"}</td>
-                <td className="max-w-[280px] truncate px-4 py-3 font-semibold" title={transaction.perusahaan ?? "—"}>{transaction.perusahaan || "—"}</td>
+                <td className="max-w-[280px] px-4 py-3" title={transaction.perusahaan ?? "—"}>
+                  <div className="truncate font-semibold">{transaction.perusahaan || "—"}</div>
+                  {transaction.id_transaksi && (
+                    <div className="font-mono text-[11px] opacity-75">{transaction.id_transaksi}</div>
+                  )}
+                </td>
                 <td className="px-4 py-3"><span className={`inline-flex rounded-md px-2 py-1 text-xs ${styles.chip}`}>{transaction.domain_lab || "—"}</span></td>
                 <td className="whitespace-nowrap px-4 py-3 text-right font-mono font-medium text-(--workspace-revenue)">{formatAmount(transaction.nominal_revenue)}</td>
                 <td className="px-4 py-3"><span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${(transaction.nominal_lost ?? 0) > 0 ? "bg-(--workspace-loss-wash) text-(--workspace-loss)" : "bg-(--workspace-revenue-wash) text-(--workspace-revenue)"}`}>{transaction.status_lost || "No Loss Identified"}</span></td>

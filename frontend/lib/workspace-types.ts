@@ -7,10 +7,12 @@ export interface SummaryData {
 
 export interface Transaction {
   id: number;
+  id_transaksi?: string | null;
   tahun: number | null;
   bulan: string | null;
   tanggal: string | null;
   perusahaan: string | null;
+  pelanggan_key?: string | null;
   jenis_transaksi: string | null;
   pengujian_stel: string | null;
   laboratorium: string | null;

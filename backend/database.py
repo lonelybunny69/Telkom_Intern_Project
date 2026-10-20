@@ -13,21 +13,29 @@ DB_PATH = Path(os.getenv("DB_PATH", str(PROJECT_ROOT / "revenue_workspace.db")))
 DB_NAME = str(DB_PATH)
 
 TRANSACTION_COLUMNS = (
+    "id_transaksi",
     "tahun",
     "bulan",
     "tanggal",
     "perusahaan",
+    "pelanggan_key",
     "jenis_transaksi",
+    "kategori_utama",
     "pengujian_stel",
+    "kategori_uji",
     "laboratorium",
+    "domain_lab",
+    "unit_org",
     "keterangan",
     "nominal_revenue",
     "ppn",
     "pph23",
-    "kategori_utama",
-    "unit_org",
-    "kategori_uji",
-    "domain_lab",
+    "jumlah_sumber",
+    "status_mapping",
+    "dugaan_duplikat",
+    "sumber_file",
+    "sumber_sheet",
+    "sumber_baris",
     "status_lost",
     "nominal_lost",
 )
@@ -35,27 +43,36 @@ TRANSACTION_COLUMNS = (
 TRANSACTIONS_TABLE_SQL = """
 CREATE TABLE IF NOT EXISTS transactions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_transaksi TEXT UNIQUE NOT NULL,
     tahun INTEGER NOT NULL,
     bulan TEXT NOT NULL,
-    tanggal TEXT NOT NULL DEFAULT '',
+    tanggal DATE,
     perusahaan TEXT NOT NULL,
+    pelanggan_key TEXT,
     jenis_transaksi TEXT NOT NULL DEFAULT '',
-    pengujian_stel TEXT NOT NULL DEFAULT '',
-    laboratorium TEXT NOT NULL DEFAULT '',
-    keterangan TEXT NOT NULL DEFAULT '',
-    nominal_revenue REAL NOT NULL DEFAULT 0,
-    ppn REAL NOT NULL DEFAULT 0,
-    pph23 REAL NOT NULL DEFAULT 0,
     kategori_utama TEXT NOT NULL DEFAULT '',
-    unit_org TEXT NOT NULL DEFAULT '',
+    pengujian_stel TEXT,
     kategori_uji TEXT NOT NULL DEFAULT '',
+    laboratorium TEXT,
     domain_lab TEXT NOT NULL DEFAULT '',
+    unit_org TEXT NOT NULL DEFAULT '',
+    keterangan TEXT,
+    nominal_revenue REAL NOT NULL DEFAULT 0.0,
+    ppn REAL,
+    pph23 REAL,
+    jumlah_sumber REAL,
+    status_mapping TEXT DEFAULT '',
+    dugaan_duplikat TEXT DEFAULT '',
+    sumber_file TEXT DEFAULT '',
+    sumber_sheet TEXT DEFAULT '',
+    sumber_baris INTEGER,
     status_lost TEXT NOT NULL DEFAULT 'No Loss Identified',
-    nominal_lost REAL NOT NULL DEFAULT 0
+    nominal_lost REAL NOT NULL DEFAULT 0.0
 )
 """
 
 INDEX_STATEMENTS = (
+    "CREATE UNIQUE INDEX IF NOT EXISTS idx_transactions_id_transaksi ON transactions(id_transaksi)",
     "CREATE INDEX IF NOT EXISTS idx_transactions_year_month ON transactions(tahun, bulan)",
     "CREATE INDEX IF NOT EXISTS idx_transactions_company ON transactions(perusahaan)",
     "CREATE INDEX IF NOT EXISTS idx_transactions_domain ON transactions(domain_lab)",
@@ -96,6 +113,20 @@ def database_session() -> Iterator[sqlite3.Connection]:
 
 def init_db() -> None:
     with database_session() as connection:
+        has_table = bool(
+            connection.execute(
+                "SELECT 1 FROM sqlite_master WHERE type='table' AND name='transactions'"
+            ).fetchone()
+        )
+        if has_table:
+            has_id_transaksi = bool(
+                connection.execute(
+                    "SELECT 1 FROM pragma_table_info('transactions') WHERE name = 'id_transaksi'"
+                ).fetchone()
+            )
+            if not has_id_transaksi:
+                connection.execute("DROP TABLE transactions")
+
         connection.execute(TRANSACTIONS_TABLE_SQL)
         connection.execute(IMPORTS_TABLE_SQL)
         for statement in INDEX_STATEMENTS:

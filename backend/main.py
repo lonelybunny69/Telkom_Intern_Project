@@ -60,36 +60,52 @@ UPLOAD_DIR = PROJECT_ROOT / "uploads"
 
 
 class TransactionInput(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="ignore")
 
+    id_transaksi: str | None = None
     tahun: int = Field(ge=1900, le=2200)
     bulan: str = Field(min_length=1, max_length=32)
-    tanggal: str = ""
+    tanggal: str | None = None
     perusahaan: str = Field(min_length=1, max_length=300)
+    pelanggan_key: str | None = None
     jenis_transaksi: str = Field(default="", max_length=200)
-    pengujian_stel: str = Field(default="", max_length=200)
-    laboratorium: str = Field(default="", max_length=200)
-    keterangan: str = ""
+    kategori_utama: str | None = None
+    pengujian_stel: str | None = None
+    kategori_uji: str | None = None
+    laboratorium: str | None = None
+    domain_lab: str | None = None
+    unit_org: str | None = None
+    keterangan: str | None = None
     nominal_revenue: float = Field(ge=0)
-    ppn: float = Field(default=0, ge=0)
-    pph23: float = 0
+    ppn: float | None = None
+    pph23: float | None = None
+    jumlah_sumber: float | None = None
+    status_mapping: str | None = None
+    dugaan_duplikat: str | None = None
+    sumber_file: str | None = None
+    sumber_sheet: str | None = None
+    sumber_baris: int | None = None
 
 
 class ChatQuery(BaseModel):
     prompt: str = Field(min_length=1, max_length=2000)
 
 
-CORE_WORKBOOK = Path(__file__).resolve().parent / "Database_Core_Pendapatan_TTH_2020_2025.xlsx"
+CORE_WORKBOOK = Path(__file__).resolve().parent / "DataBase_tetehaworkspace.xlsx"
 
 
 @app.on_event("startup")
 def startup_database() -> None:
     init_db()
-    # Auto-seed dari workbook inti saat deploy pertama (database kosong)
     with database_session() as connection:
-        count = connection.execute("SELECT COUNT(*) FROM transactions").fetchone()[0]
-    if count == 0 and CORE_WORKBOOK.exists():
-        logger.info("Database kosong — memuat data dari workbook inti: %s", CORE_WORKBOOK.name)
+        has_id_transaksi = bool(
+            connection.execute(
+                "SELECT 1 FROM pragma_table_info('transactions') WHERE name = 'id_transaksi'"
+            ).fetchone()
+        )
+        count = connection.execute("SELECT COUNT(*) FROM transactions").fetchone()[0] if has_id_transaksi else 0
+    if (count == 0 or not has_id_transaksi) and CORE_WORKBOOK.exists():
+        logger.info("Memuat data dari workbook inti: %s", CORE_WORKBOOK.name)
         try:
             imported = process_excel_file(CORE_WORKBOOK)
             logger.info("Berhasil memuat %d transaksi dari workbook inti.", imported)
@@ -127,7 +143,7 @@ def process_excel_file(
                 make_backup=True,
             )
             return imported_count
-        rows = [row for row in rows if row[0] == year_override]
+        rows = [row for row in rows if row[1] == year_override]  # row[1] is tahun in TRANSACTION_COLUMNS
         source_hash = file_sha256_for_year(source_hash, year_override)
     else:
         rows = rows_from_monthly_workbook(
@@ -155,24 +171,30 @@ def _build_where(year: int | None, search: str | None, status: str | None) -> tu
         pattern = f"%{search.strip()}%"
         conditions.append(
             "(perusahaan LIKE ? COLLATE NOCASE OR domain_lab LIKE ? COLLATE NOCASE "
-            "OR bulan LIKE ? COLLATE NOCASE OR jenis_transaksi LIKE ? COLLATE NOCASE)"
+            "OR bulan LIKE ? COLLATE NOCASE OR jenis_transaksi LIKE ? COLLATE NOCASE "
+            "OR id_transaksi LIKE ? COLLATE NOCASE)"
         )
-        values.extend([pattern, pattern, pattern, pattern])
+        values.extend([pattern, pattern, pattern, pattern, pattern])
     return (" WHERE " + " AND ".join(conditions)) if conditions else "", values
 
 
 def _transaction_values(tx: TransactionInput) -> tuple[Any, ...]:
+    import uuid
+
     values = tx.model_dump()
-    values.update(
-        derive_transaction_fields(
-            tx.jenis_transaksi,
-            tx.pengujian_stel,
-            tx.laboratorium,
-            tx.keterangan,
-            tx.pph23,
-        )
+    if not values.get("id_transaksi"):
+        values["id_transaksi"] = f"TRX-{tx.tahun}-{uuid.uuid4().hex[:6].upper()}"
+    derived = derive_transaction_fields(
+        tx.jenis_transaksi or "",
+        tx.pengujian_stel or "",
+        tx.laboratorium or "",
+        tx.keterangan or "",
+        tx.pph23 or 0.0,
     )
-    return tuple(values[column] for column in TRANSACTION_COLUMNS)
+    for key, val in derived.items():
+        if not values.get(key):
+            values[key] = val
+    return tuple(values.get(column) for column in TRANSACTION_COLUMNS)
 
 
 @app.get("/", include_in_schema=False)
@@ -246,8 +268,8 @@ def get_summary_metrics(
     denominator = total_revenue + total_lost
     lost_ratio = total_lost / denominator * 100 if denominator else 0
     return {
-        "total_revenue": float(total_revenue),
-        "total_lost": float(total_lost),
+        "total_revenue": round(float(total_revenue), 1),
+        "total_lost": round(float(total_lost), 2),
         "total_transactions": int(total_transactions),
         "lost_ratio_percent": round(lost_ratio, 2),
     }

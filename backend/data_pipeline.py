@@ -14,8 +14,23 @@ try:
 except ImportError:  # Supports running scripts from inside backend/ as well.
     from database import TRANSACTION_COLUMNS, init_db, replace_transactions
 
-DEFAULT_WORKBOOK = Path(__file__).resolve().with_name("Database_Core_Pendapatan_TTH_2020_2025.xlsx")
-AMOUNT_COLUMNS = {"nominal_revenue", "ppn", "pph23", "nominal_lost"}
+DEFAULT_WORKBOOK = Path(__file__).resolve().with_name("DataBase_tetehaworkspace.xlsx")
+AMOUNT_COLUMNS = {"nominal_revenue", "nominal_lost"}
+NULLABLE_COLUMNS = {
+    "tanggal",
+    "laboratorium",
+    "pengujian_stel",
+    "ppn",
+    "pph23",
+    "jumlah_sumber",
+    "keterangan",
+    "pelanggan_key",
+    "sumber_baris",
+}
+COLUMN_ALIASES: dict[str, tuple[str, ...]] = {
+    "ppn": ("ppn_tercatat", "ppn"),
+    "pph23": ("pph23_biayatransfer_sumber", "pph23", "pph_23"),
+}
 MONTHS = ("Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember")
 
 
@@ -24,8 +39,12 @@ def normalize_header(value: Any) -> str:
 
 
 def normalize_cell(column: str, value: Any) -> Any:
-    if value is None:
-        return 0.0 if column in AMOUNT_COLUMNS else ""
+    if value is None or (isinstance(value, str) and not value.strip()):
+        if column in AMOUNT_COLUMNS:
+            return 0.0
+        if column in NULLABLE_COLUMNS:
+            return None
+        return ""
     if column == "tahun":
         try:
             year = int(value)
@@ -42,10 +61,24 @@ def normalize_cell(column: str, value: Any) -> Any:
         if not math.isfinite(amount):
             raise ValueError(f"Non-finite amount in column '{column}'")
         return amount
-    if isinstance(value, datetime):
-        return value.strftime("%Y-%m-%d %H:%M:%S")
-    if isinstance(value, date):
-        return value.isoformat()
+    if column in {"ppn", "pph23", "jumlah_sumber"}:
+        try:
+            amount = float(value)
+            return amount if math.isfinite(amount) else None
+        except (TypeError, ValueError):
+            return None
+    if column == "sumber_baris":
+        try:
+            return int(value)
+        except (TypeError, ValueError):
+            return None
+    if column == "tanggal":
+        if isinstance(value, (datetime, date)):
+            return value.strftime("%Y-%m-%d")
+        text = str(value).strip()
+        return text if text else None
+    if isinstance(value, (datetime, date)):
+        return value.strftime("%Y-%m-%d")
     return str(value).strip()
 
 
@@ -124,21 +157,52 @@ def rows_from_workbook(workbook_path: Path = DEFAULT_WORKBOOK) -> list[tuple[Any
         if not header_cells:
             raise ValueError("The 'Master Data' sheet is empty.")
 
-        header_map = {normalize_header(name): index for index, name in enumerate(header_cells) if name is not None}
-        missing_columns = [name for name in TRANSACTION_COLUMNS if name not in header_map]
-        if missing_columns:
-            raise ValueError(f"Workbook is missing required columns: {', '.join(missing_columns)}")
+        raw_map = {normalize_header(name): index for index, name in enumerate(header_cells) if name is not None}
+        header_map: dict[str, int] = {}
+        for col in TRANSACTION_COLUMNS:
+            if col in raw_map:
+                header_map[col] = raw_map[col]
+            elif col in COLUMN_ALIASES:
+                for alias in COLUMN_ALIASES[col]:
+                    if alias in raw_map:
+                        header_map[col] = raw_map[alias]
+                        break
 
         records: list[tuple[Any, ...]] = []
         for row_number, row in enumerate(iterator, start=2):
             if not row or not any(value is not None for value in row):
                 continue
-            record = tuple(
-                normalize_cell(column, row[header_map[column]] if header_map[column] < len(row) else None)
-                for column in TRANSACTION_COLUMNS
-            )
-            if not record[0] or not record[1] or not record[3]:
+
+            rec_dict: dict[str, Any] = {}
+            for col in TRANSACTION_COLUMNS:
+                idx = header_map.get(col)
+                val = row[idx] if idx is not None and idx < len(row) else None
+                rec_dict[col] = normalize_cell(col, val)
+
+            # Ensure id_transaksi exists
+            if not rec_dict.get("id_transaksi"):
+                tahun_val = rec_dict.get("tahun", 2020)
+                rec_dict["id_transaksi"] = f"TRX-{tahun_val}-{row_number:05d}"
+
+            # Derive status_lost and nominal_lost if not present in workbook
+            if "status_lost" not in raw_map or not rec_dict.get("status_lost"):
+                notes_lower = (rec_dict.get("keterangan") or "").lower()
+                pph = rec_dict.get("pph23") or 0.0
+                unpaid_terms = ("tidak membaya", "tidak bayar", "tidak banyar", "unpaid")
+                if any(term in notes_lower for term in unpaid_terms):
+                    rec_dict["status_lost"] = "Unpaid PPh 23"
+                    rec_dict["nominal_lost"] = abs(pph)
+                elif any(term in notes_lower for term in ("kurang", "belum")):
+                    rec_dict["status_lost"] = "Kurang/Belum Bayar"
+                    rec_dict["nominal_lost"] = abs(pph)
+                else:
+                    rec_dict["status_lost"] = "No Loss Identified"
+                    rec_dict["nominal_lost"] = 0.0
+
+            if not rec_dict.get("tahun") or not rec_dict.get("bulan") or not rec_dict.get("perusahaan"):
                 raise ValueError(f"Required year, month, or company is missing at workbook row {row_number}.")
+
+            record = tuple(rec_dict[column] for column in TRANSACTION_COLUMNS)
             records.append(record)
 
         if not records:
