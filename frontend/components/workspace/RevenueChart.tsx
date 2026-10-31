@@ -25,12 +25,12 @@ export default function RevenueChart({ transactions, theme, selectedYear, onOpen
 
   return <section className="mb-6 grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.6fr)_minmax(280px,0.8fr)]">
     <article className={`workspace-glass rounded-2xl border p-5 sm:p-6 ${styles.border}`}>
-      <div className="mb-4"><p className="text-xs font-bold uppercase tracking-[0.15em] text-brand-red">Ringkasan performa</p><h2 className="mt-1 text-lg font-bold">Revenue & lost revenue</h2><p className={`mt-1 text-xs ${styles.muted}`}>10 transaksi terbaru pada halaman aktif · {selectedYear === "all" ? "semua tahun" : selectedYear}</p></div>
+      <div className="mb-4"><p className="text-xs font-bold uppercase tracking-[0.15em] text-brand-red">Ringkasan performa</p><h2 className="mt-1 text-lg font-bold">Revenue & Potongan PPh 23</h2><p className={`mt-1 text-xs ${styles.muted}`}>10 transaksi terbaru pada halaman aktif · {selectedYear === "all" ? "semua tahun" : selectedYear}</p></div>
       <div className="h-[260px] w-full">
         {!transactions.length ? <div className={`grid h-full place-items-center text-sm ${styles.muted}`}>Belum ada data untuk ditampilkan.</div> : <ResponsiveContainer width="100%" height="100%"><BarChart data={transactions.slice(0, 10)} margin={{ top: 4, right: 4, left: 8, bottom: 4 }}>
           <CartesianGrid strokeDasharray="3 3" stroke={tone.grid} vertical={false} /><XAxis dataKey="perusahaan" stroke={tone.axis} tick={{ fontSize: 10, fill: tone.axis }} tickLine={false} axisLine={false} interval="preserveStartEnd" /><YAxis width={74} stroke={tone.axis} tick={{ fontSize: 10, fill: tone.axis }} tickLine={false} axisLine={false} tickFormatter={(value: number) => compactIDR(Number(value))} />
           <Tooltip contentStyle={{ backgroundColor: tone.tooltip, borderColor: tone.grid, borderRadius: 12, color: tone.text, fontSize: 12 }} formatter={(value) => formatIDR(typeof value === "number" ? value : Number(value ?? 0))} /><Legend wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
-          <Bar dataKey="nominal_revenue" fill={tone.revenue} name="Revenue" radius={[4, 4, 0, 0]} maxBarSize={34} /><Bar dataKey="nominal_lost" fill={tone.loss} name="Lost revenue" radius={[4, 4, 0, 0]} maxBarSize={34} />
+          <Bar dataKey="nominal_revenue" fill={tone.revenue} name="Revenue" radius={[4, 4, 0, 0]} maxBarSize={34} /><Bar dataKey="nominal_lost" fill={tone.loss} name="Potongan PPh 23" radius={[4, 4, 0, 0]} maxBarSize={34} />
         </BarChart></ResponsiveContainer>}
       </div>
     </article>

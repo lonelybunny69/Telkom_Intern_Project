@@ -1,29 +1,30 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Nunito } from "next/font/google";
+import { DashboardProvider } from "../lib/dashboard-context";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const nunito = Nunito({
+  variable: "--font-nunito",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
-  title: "Telkom Revenue Database",
-  description: "Database workspace for Telkom revenue transactions, analytics, and records management.",
+  title: "Telkom Revenue Dashboard",
+  description:
+    "Dashboard analitik revenue Telkom — data SPK & transaksi 2020-2025.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html
-      lang="id"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="id" className={`${nunito.variable} h-full antialiased`}>
+      <body className="min-h-full flex flex-col bg-gray-50 text-gray-900">
+        <DashboardProvider>{children}</DashboardProvider>
+      </body>
     </html>
   );
 }

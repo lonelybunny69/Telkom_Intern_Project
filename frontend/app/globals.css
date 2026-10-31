@@ -1,12 +1,16 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-nunito, var(--font-geist-sans));
   --font-mono: var(--font-geist-mono);
   --color-brand-red: var(--workspace-brand);
   --color-brand-wine: var(--workspace-wine);
   --color-workspace-revenue: var(--workspace-revenue);
   --color-workspace-loss: var(--workspace-loss);
+  /* Telkom red design token — used as bg-telkom-red, text-telkom-red, border-telkom-red, etc. */
+  --color-telkom-red: #E31E24;
+  --color-telkom-red-dark: #B51519;
+  --color-telkom-red-light: #FF4D52;
 }
 
 @layer base {

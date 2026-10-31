@@ -18,7 +18,7 @@ export default function MetricCards({ summary, isLoading, theme }: MetricCardsPr
   const styles = workspaceThemeClasses[theme];
   const metrics = [
     { label: "Total Revenue", value: summary ? formatIDR(summary.total_revenue) : "—", Icon: DollarSign, color: "text-(--workspace-revenue)", wash: "bg-(--workspace-revenue-wash)" },
-    { label: "Lost Revenue", value: summary ? formatIDR(summary.total_lost) : "—", Icon: TrendingDown, color: "text-(--workspace-loss)", wash: "bg-(--workspace-loss-wash)" },
+    { label: "Potongan PPh 23", value: summary ? formatIDR(summary.total_lost) : "—", Icon: TrendingDown, color: "text-(--workspace-loss)", wash: "bg-(--workspace-loss-wash)" },
     { label: "Lost Ratio", value: summary ? `${summary.lost_ratio_percent}%` : "—", Icon: Percent, color: "text-(--workspace-loss)", wash: "bg-(--workspace-loss-wash)" },
     { label: "Total Transaksi", value: summary ? `${summary.total_transactions.toLocaleString("id-ID")} Trx` : "—", Icon: FileText, color: "text-(--workspace-foreground)", wash: "bg-(--workspace-chip)" },
   ];
