@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import GlobalFilters from "../components/dashboard/GlobalFilters";
+import NavbarFilters from "../components/dashboard/NavbarFilters";
 import ExecutiveSummary from "../components/dashboard/tabs/ExecutiveSummary";
 import OperationalAnalytics from "../components/dashboard/tabs/OperationalAnalytics";
 import ClientAnalytics from "../components/dashboard/tabs/ClientAnalytics";
@@ -14,11 +14,11 @@ import ChatbotDrawer from "../components/dashboard/ChatbotDrawer";
 // Tab config
 // ─────────────────────────────────────────────
 const TABS = [
-  { id: 0, label: "Executive Summary", icon: "📊" },
-  { id: 1, label: "Operasional", icon: "🏭" },
-  { id: 2, label: "Klien", icon: "🏢" },
-  { id: 3, label: "Produk & Layanan", icon: "📦" },
-  { id: 4, label: "Data Explorer", icon: "🔍" },
+  { id: 0, label: "Executive Summary" },
+  { id: 1, label: "Operasional" },
+  { id: 2, label: "Klien" },
+  { id: 3, label: "Produk & Layanan" },
+  { id: 4, label: "Data Explorer" },
 ] as const;
 
 type TabId = (typeof TABS)[number]["id"];
@@ -35,51 +35,49 @@ export default function DashboardPage() {
       {/* ── Header ── */}
       <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-30">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-4 h-16">
-            {/* Logo */}
-            <div className="flex-shrink-0">
-              <Image
-                src="/data/telkomsel_logo.png"
-                alt="Telkom logo"
-                width={120}
-                height={40}
-                style={{ objectFit: "contain", height: 36, width: "auto" }}
-                priority
-              />
+          <div className="flex flex-wrap items-center justify-between gap-3 min-h-[4rem] py-2 sm:py-0">
+            {/* Left: Logo & Title */}
+            <div className="flex items-center gap-3.5 flex-shrink-0">
+              <div className="flex-shrink-0">
+                <Image
+                  src="/data/telkomsel_logo.png"
+                  alt="Telkom logo"
+                  width={110}
+                  height={36}
+                  style={{ objectFit: "contain", height: 34, width: "auto" }}
+                  priority
+                />
+              </div>
+
+              <div className="flex flex-col leading-tight border-l border-gray-200 pl-3">
+                <span className="text-base font-bold text-gray-900 tracking-tight">
+                  Revenue Dashboard
+                </span>
+                <span className="text-xs text-gray-500">
+                  Laboratorium Telkom · 2020–2025
+                </span>
+              </div>
             </div>
 
-            {/* Title */}
-            <div className="flex flex-col leading-tight">
-              <span className="text-base font-bold text-gray-900 tracking-tight">
-                Revenue Dashboard
-              </span>
-              <span className="text-xs text-gray-500">
-                Laboratorium Telkom · 2020–2025
-              </span>
+            {/* Right: Navbar Filters (Tahun, Lab, Klien) + AI Assistant */}
+            <div className="flex items-center flex-wrap gap-2 sm:gap-2.5">
+              <NavbarFilters />
+
+              <div className="h-6 w-px bg-gray-200 hidden sm:block" />
+
+              {/* AI Assistant button */}
+              <button
+                onClick={() => setChatOpen(true)}
+                className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-semibold text-white shadow-xs transition hover:brightness-110 active:scale-95"
+                style={{ background: "#E31E24" }}
+              >
+                <span>🤖</span>
+                <span>AI Assistant</span>
+              </button>
             </div>
-
-            {/* Spacer */}
-            <div className="flex-1" />
-
-            {/* AI Assistant button (desktop) */}
-            <button
-              onClick={() => setChatOpen(true)}
-              className="hidden sm:flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold text-white shadow-sm transition hover:brightness-110 active:scale-95"
-              style={{ background: "#E31E24" }}
-            >
-              <span>🤖</span>
-              <span>AI Assistant</span>
-            </button>
           </div>
         </div>
       </header>
-
-      {/* ── Global Filters ── */}
-      <div className="bg-white border-b border-gray-200 shadow-xs">
-        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
-          <GlobalFilters />
-        </div>
-      </div>
 
       {/* ── Tab Nav ── */}
       <div className="bg-white border-b border-gray-200">
@@ -92,14 +90,13 @@ export default function DashboardPage() {
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={[
-                    "flex items-center gap-1.5 px-4 py-3 text-sm font-semibold whitespace-nowrap border-b-2 transition-colors focus:outline-none",
+                    "px-4 py-3 text-sm font-semibold whitespace-nowrap border-b-2 transition-colors focus:outline-none",
                     isActive
                       ? "border-telkom-red text-telkom-red"
                       : "border-transparent text-gray-500 hover:text-gray-800 hover:border-gray-300",
                   ].join(" ")}
                   style={isActive ? { borderColor: "#E31E24", color: "#E31E24" } : {}}
                 >
-                  <span>{tab.icon}</span>
                   <span>{tab.label}</span>
                 </button>
               );
