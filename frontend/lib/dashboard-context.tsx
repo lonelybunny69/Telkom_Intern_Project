@@ -35,6 +35,10 @@ interface DashboardContextValue {
   availableYears: number[];
   availableLabs: string[];
   availableTestTypes: string[];
+  // theme
+  theme: "light" | "dark";
+  setTheme: (theme: "light" | "dark") => void;
+  toggleTheme: () => void;
 }
 
 const DEFAULT_FILTERS: DashboardFilters = {
@@ -52,6 +56,64 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [filters, setFilters] = useState<DashboardFilters>(DEFAULT_FILTERS);
+  const [theme, setThemeState] = useState<"light" | "dark">("light");
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("telkom-theme") as "light" | "dark" | null;
+      if (saved === "light" || saved === "dark") {
+        setThemeState(saved);
+        if (saved === "dark") {
+          document.documentElement.classList.add("dark");
+          document.documentElement.setAttribute("data-theme", "dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+          document.documentElement.setAttribute("data-theme", "light");
+        }
+      } else if (typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        setThemeState("dark");
+        document.documentElement.classList.add("dark");
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const setTheme = useCallback((nextTheme: "light" | "dark") => {
+    setThemeState(nextTheme);
+    try {
+      localStorage.setItem("telkom-theme", nextTheme);
+    } catch {
+      // ignore
+    }
+    if (nextTheme === "dark") {
+      document.documentElement.classList.add("dark");
+      document.documentElement.setAttribute("data-theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      document.documentElement.setAttribute("data-theme", "light");
+    }
+  }, []);
+
+  const toggleTheme = useCallback(() => {
+    setThemeState((prev) => {
+      const next = prev === "dark" ? "light" : "dark";
+      try {
+        localStorage.setItem("telkom-theme", next);
+      } catch {
+        // ignore
+      }
+      if (next === "dark") {
+        document.documentElement.classList.add("dark");
+        document.documentElement.setAttribute("data-theme", "dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+        document.documentElement.setAttribute("data-theme", "light");
+      }
+      return next;
+    });
+  }, []);
 
   useEffect(() => {
     loadAllData()
@@ -113,6 +175,9 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     availableYears,
     availableLabs,
     availableTestTypes,
+    theme,
+    setTheme,
+    toggleTheme,
   };
 
   return (

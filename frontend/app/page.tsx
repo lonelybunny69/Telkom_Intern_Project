@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import NavbarFilters from "../components/dashboard/NavbarFilters";
+import ThemeToggle from "../components/ui/ThemeToggle";
 import ExecutiveSummary from "../components/dashboard/tabs/ExecutiveSummary";
 import OperationalAnalytics from "../components/dashboard/tabs/OperationalAnalytics";
 import ClientAnalytics from "../components/dashboard/tabs/ClientAnalytics";
@@ -31,9 +32,9 @@ export default function DashboardPage() {
   const [chatOpen, setChatOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-gray-50 dark:bg-[#0F1117] flex flex-col transition-colors duration-200">
       {/* ── Header ── */}
-      <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-30">
+      <header className="bg-white dark:bg-[#161820] border-b border-gray-200 dark:border-gray-800 shadow-sm sticky top-0 z-30 transition-colors duration-200">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap items-center justify-between gap-3 min-h-[4rem] py-2 sm:py-0">
             {/* Left: Logo & Title */}
@@ -49,21 +50,24 @@ export default function DashboardPage() {
                 />
               </div>
 
-              <div className="flex flex-col leading-tight border-l border-gray-200 pl-3">
-                <span className="text-base font-bold text-gray-900 tracking-tight">
+              <div className="flex flex-col leading-tight border-l border-gray-200 dark:border-gray-700 pl-3">
+                <span className="text-base font-bold text-gray-900 dark:text-white tracking-tight">
                   Revenue Dashboard
                 </span>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-gray-500 dark:text-gray-400">
                   Laboratorium Telkom · 2020–2025
                 </span>
               </div>
             </div>
 
-            {/* Right: Navbar Filters (Tahun, Lab, Klien) + AI Assistant */}
+            {/* Right: Navbar Filters (Tahun, Lab, Klien) + Theme Toggle + AI Assistant */}
             <div className="flex items-center flex-wrap gap-2 sm:gap-2.5">
               <NavbarFilters />
 
-              <div className="h-6 w-px bg-gray-200 hidden sm:block" />
+              <div className="h-6 w-px bg-gray-200 dark:bg-gray-700 hidden sm:block" />
+
+              {/* Theme Toggle */}
+              <ThemeToggle />
 
               {/* AI Assistant button */}
               <button
@@ -80,7 +84,7 @@ export default function DashboardPage() {
       </header>
 
       {/* ── Tab Nav ── */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-white dark:bg-[#161820] border-b border-gray-200 dark:border-gray-800 transition-colors duration-200">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="flex gap-1 overflow-x-auto" aria-label="Tab navigasi">
             {TABS.map((tab) => {
@@ -93,7 +97,7 @@ export default function DashboardPage() {
                     "px-4 py-3 text-sm font-semibold whitespace-nowrap border-b-2 transition-colors focus:outline-none",
                     isActive
                       ? "border-telkom-red text-telkom-red"
-                      : "border-transparent text-gray-500 hover:text-gray-800 hover:border-gray-300",
+                      : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-700",
                   ].join(" ")}
                   style={isActive ? { borderColor: "#E31E24", color: "#E31E24" } : {}}
                 >
@@ -115,7 +119,7 @@ export default function DashboardPage() {
       </main>
 
       {/* ── Footer ── */}
-      <footer className="border-t border-gray-200 bg-white py-3 text-center text-xs text-gray-400">
+      <footer className="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-[#161820] py-3 text-center text-xs text-gray-400 dark:text-gray-500 transition-colors duration-200">
         Telkom Revenue Dashboard © 2025 · Data 2020–2025 · Laboratorium Telkom
       </footer>
 

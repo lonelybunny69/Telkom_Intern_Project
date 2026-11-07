@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useMemo } from "react";
 import {
@@ -122,7 +122,7 @@ export default function ProductAnalysis() {
         >
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={byKategori} layout="vertical">
-              <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
+              <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="var(--chart-grid)" />
               <XAxis
                 type="number"
                 tickFormatter={(v) => `${(v / 1e9).toFixed(0)}M`}
@@ -147,7 +147,7 @@ export default function ProductAnalysis() {
       >
         <ResponsiveContainer width="100%" height={260}>
           <BarChart data={stelVsLabByYear}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" />
             <XAxis dataKey="tahun" tick={{ fontSize: 12 }} />
             <YAxis
               tickFormatter={(v) => `${(v / 1e9).toFixed(0)}M`}
@@ -169,7 +169,7 @@ export default function ProductAnalysis() {
       >
         <ResponsiveContainer width="100%" height={220}>
           <BarChart data={byKatUji}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" />
             <XAxis dataKey="name" tick={{ fontSize: 11 }} />
             <YAxis tickFormatter={(v) => `${(v / 1e9).toFixed(0)}M`} tick={{ fontSize: 11 }} />
             <Tooltip formatter={(v: unknown) => [formatRupiah(v as number, true), "Revenue"]} />

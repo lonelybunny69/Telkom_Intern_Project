@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useMemo } from "react";
 import {
@@ -31,7 +31,7 @@ const COLORS = ["#E31E24", "#F97316", "#EAB308", "#22C55E", "#3B82F6", "#8B5CF6"
 const YEARS = [2020, 2021, 2022, 2023, 2024, 2025];
 
 export default function OperationalAnalytics() {
-  const { filteredRevenue, filteredSpk } = useDashboard();
+  const { filteredRevenue, filteredSpk, theme } = useDashboard();
 
   // SPK by year
   const spkYear = useMemo(() => spkByYear(filteredSpk), [filteredSpk]);
@@ -107,11 +107,11 @@ export default function OperationalAnalytics() {
   }, [heatmap]);
 
   function heatColor(value: number) {
-    if (value === 0) return "#F9FAFB";
+    if (value === 0) return theme === "dark" ? "#1E222D" : "#F9FAFB";
     const pct = value / heatMax;
-    if (pct < 0.25) return "#FEE2E2";
-    if (pct < 0.5) return "#FECACA";
-    if (pct < 0.75) return "#F87171";
+    if (pct < 0.25) return theme === "dark" ? "#4A181C" : "#FEE2E2";
+    if (pct < 0.5) return theme === "dark" ? "#731B22" : "#FECACA";
+    if (pct < 0.75) return theme === "dark" ? "#A51F2A" : "#F87171";
     return RED;
   }
 
@@ -122,7 +122,7 @@ export default function OperationalAnalytics() {
         <ChartCard title="Volume SPK per Tahun" subtitle="Jumlah SPK (termasuk rekap bulanan)">
           <ResponsiveContainer width="100%" height={260}>
             <BarChart data={spkYear.map((d) => ({ tahun: String(d.tahun), SPK: d.spkCount }))}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" />
               <XAxis dataKey="tahun" tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 11 }} />
               <Tooltip formatter={(v: unknown) => [formatNumber(v as number), "Jumlah SPK"]} />
@@ -135,7 +135,7 @@ export default function OperationalAnalytics() {
         <ChartCard title="SPK per Triwulan" subtitle="Perbandingan volume per kuartal per tahun">
           <ResponsiveContainer width="100%" height={260}>
             <BarChart data={twData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" />
               <XAxis dataKey="name" tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 11 }} />
               <Tooltip />
@@ -154,9 +154,9 @@ export default function OperationalAnalytics() {
           <table className="min-w-full text-xs">
             <thead>
               <tr>
-                <th className="py-2 pr-3 text-left font-semibold text-gray-500 w-16">Bulan</th>
+                <th className="py-2 pr-3 text-left font-semibold text-gray-500 dark:text-gray-400 w-16">Bulan</th>
                 {YEARS.map((y) => (
-                  <th key={y} className="py-2 px-2 text-center font-semibold text-gray-500">
+                  <th key={y} className="py-2 px-2 text-center font-semibold text-gray-500 dark:text-gray-400">
                     {y}
                   </th>
                 ))}
@@ -165,7 +165,7 @@ export default function OperationalAnalytics() {
             <tbody>
               {heatmap.map((row) => (
                 <tr key={String(row.bulan)}>
-                  <td className="py-1 pr-3 font-medium text-gray-600">{String(row.bulan)}</td>
+                  <td className="py-1 pr-3 font-medium text-gray-600 dark:text-gray-300">{String(row.bulan)}</td>
                   {YEARS.map((y) => {
                     const v = Number(row[`${y}`] ?? 0);
                     return (
@@ -174,7 +174,7 @@ export default function OperationalAnalytics() {
                           className="mx-auto flex h-8 w-12 items-center justify-center rounded-md font-semibold"
                           style={{
                             background: heatColor(v),
-                            color: v / heatMax > 0.5 ? "white" : "#374151",
+                            color: v / heatMax > 0.5 || theme === "dark" ? "white" : "#374151",
                           }}
                         >
                           {v > 0 ? v : "–"}

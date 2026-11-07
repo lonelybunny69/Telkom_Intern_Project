@@ -90,24 +90,24 @@ export default function DataTable<T extends Record<string, unknown>>({
             value={query}
             onChange={(e) => { setQuery(e.target.value); setPage(0); }}
             placeholder={searchPlaceholder}
-            className="w-full max-w-xs rounded-lg border border-gray-200 px-3 py-1.5 text-sm focus:border-telkom-red focus:outline-none focus:ring-1 focus:ring-telkom-red"
+            className="w-full max-w-xs rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#13151B] px-3 py-1.5 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:border-telkom-red focus:outline-none focus:ring-1 focus:ring-telkom-red"
           />
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-gray-500 dark:text-gray-400">
             {sorted.length.toLocaleString("id-ID")} baris
           </span>
         </div>
       )}
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-lg border border-gray-200">
+      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#161820]">
         <table className="min-w-full text-sm">
-          <thead className="bg-gray-50">
+          <thead className="bg-gray-50 dark:bg-[#1A1D26] border-b border-gray-200 dark:border-gray-800">
             <tr>
               {columns.map((col) => (
                 <th
                   key={String(col.key)}
-                  className={`${headPad} text-left text-xs font-semibold uppercase tracking-wide text-gray-600 ${
-                    col.sortable ? "cursor-pointer select-none hover:bg-gray-100" : ""
+                  className={`${headPad} text-left text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300 ${
+                    col.sortable ? "cursor-pointer select-none hover:bg-gray-100 dark:hover:bg-gray-800/80" : ""
                   } ${col.align === "right" ? "text-right" : col.align === "center" ? "text-center" : ""}`}
                   style={col.width ? { width: col.width } : {}}
                   onClick={col.sortable ? () => handleSort(String(col.key)) : undefined}
@@ -122,12 +122,12 @@ export default function DataTable<T extends Record<string, unknown>>({
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
             {paged.length === 0 ? (
               <tr>
                 <td
                   colSpan={columns.length}
-                  className="py-10 text-center text-sm text-gray-400"
+                  className="py-10 text-center text-sm text-gray-400 dark:text-gray-500"
                 >
                   {emptyText}
                 </td>
@@ -136,12 +136,12 @@ export default function DataTable<T extends Record<string, unknown>>({
               paged.map((row, idx) => (
                 <tr
                   key={rowKey(row, idx)}
-                  className="hover:bg-gray-50 transition-colors"
+                  className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
                 >
                   {columns.map((col) => (
                     <td
                       key={String(col.key)}
-                      className={`${cellPad} text-gray-700 ${
+                      className={`${cellPad} text-gray-700 dark:text-gray-200 ${
                         col.align === "right"
                           ? "text-right tabular-nums"
                           : col.align === "center"
@@ -163,7 +163,7 @@ export default function DataTable<T extends Record<string, unknown>>({
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between text-xs text-gray-600">
+        <div className="flex items-center justify-between text-xs text-gray-600 dark:text-gray-400">
           <span>
             Halaman {page + 1} dari {totalPages}
           </span>
@@ -171,28 +171,28 @@ export default function DataTable<T extends Record<string, unknown>>({
             <button
               onClick={() => setPage(0)}
               disabled={page === 0}
-              className="rounded border px-2 py-1 disabled:opacity-40 hover:bg-gray-100"
+              className="rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1A1D26] px-2 py-1 disabled:opacity-40 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-200"
             >
               «
             </button>
             <button
               onClick={() => setPage((p) => Math.max(0, p - 1))}
               disabled={page === 0}
-              className="rounded border px-2 py-1 disabled:opacity-40 hover:bg-gray-100"
+              className="rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1A1D26] px-2 py-1 disabled:opacity-40 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-200"
             >
               ‹
             </button>
             <button
               onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
               disabled={page === totalPages - 1}
-              className="rounded border px-2 py-1 disabled:opacity-40 hover:bg-gray-100"
+              className="rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1A1D26] px-2 py-1 disabled:opacity-40 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-200"
             >
               ›
             </button>
             <button
               onClick={() => setPage(totalPages - 1)}
               disabled={page === totalPages - 1}
-              className="rounded border px-2 py-1 disabled:opacity-40 hover:bg-gray-100"
+              className="rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1A1D26] px-2 py-1 disabled:opacity-40 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-200"
             >
               »
             </button>

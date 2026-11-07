@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import DataTable from "../../ui/DataTable";
@@ -87,7 +87,7 @@ export default function DataExplorer() {
     <div className="space-y-4">
       {/* Dataset switcher + export */}
       <div className="flex items-center justify-between">
-        <div className="flex rounded-lg border border-gray-200 bg-white overflow-hidden">
+        <div className="flex rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#161820] overflow-hidden">
           {(["revenue", "spk"] as DatasetKey[]).map((ds) => (
             <button
               key={ds}
@@ -95,7 +95,7 @@ export default function DataExplorer() {
               className={`px-5 py-2 text-sm font-semibold transition-colors ${
                 dataset === ds
                   ? "bg-telkom-red text-white"
-                  : "text-gray-600 hover:bg-gray-50"
+                  : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
               }`}
             >
               {ds === "revenue" ? "💰 Data Revenue" : "📋 Data SPK"}
@@ -104,7 +104,7 @@ export default function DataExplorer() {
         </div>
 
         <div className="flex items-center gap-3">
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-gray-500 dark:text-gray-400">
             {formatNumber(activeData.length)} baris ditampilkan
           </span>
           <ExportButton
@@ -117,7 +117,7 @@ export default function DataExplorer() {
 
       {/* Data summary strip */}
       {dataset === "revenue" && (
-        <div className="flex gap-6 rounded-lg border border-gray-100 bg-gray-50 px-4 py-2 text-xs text-gray-600">
+        <div className="flex gap-6 rounded-lg border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-[#161820] px-4 py-2 text-xs text-gray-600 dark:text-gray-300">
           <span>
             <strong>Total transaksi:</strong> {formatNumber(filteredRevenue.length)}
           </span>
@@ -135,7 +135,7 @@ export default function DataExplorer() {
         </div>
       )}
       {dataset === "spk" && (
-        <div className="flex gap-6 rounded-lg border border-gray-100 bg-gray-50 px-4 py-2 text-xs text-gray-600">
+        <div className="flex gap-6 rounded-lg border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-[#161820] px-4 py-2 text-xs text-gray-600 dark:text-gray-300">
           <span>
             <strong>Total baris SPK:</strong> {formatNumber(filteredSpk.length)}
           </span>
@@ -147,7 +147,7 @@ export default function DataExplorer() {
       )}
 
       {/* Table */}
-      <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+      <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#161820] p-4 shadow-sm">
         <DataTable
           columns={activeColumns as any}
           data={activeData as any}

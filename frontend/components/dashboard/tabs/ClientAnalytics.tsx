@@ -128,7 +128,7 @@ export default function ClientAnalytics() {
                 }
               }}
             >
-              <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
+              <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="var(--chart-grid)" />
               <XAxis
                 type="number"
                 tickFormatter={(v) => `${(v / 1e9).toFixed(0)}M`}
@@ -137,7 +137,7 @@ export default function ClientAnalytics() {
               <YAxis type="category" dataKey="name" tick={{ fontSize: 9 }} width={120} />
               <Tooltip
                 formatter={(v: unknown) => [formatRupiah(v as number, true), "Revenue"]}
-                cursor={{ fill: "#FEF2F2" }}
+                cursor={{ fill: "rgba(227, 30, 36, 0.08)" }}
               />
               <Bar dataKey="Revenue" radius={[0, 4, 4, 0]} style={{ cursor: "pointer" }}>
                 {top10.map((_, i) => (
@@ -215,7 +215,7 @@ export default function ClientAnalytics() {
           actions={
             <button
               onClick={() => setSelectedClient(null)}
-              className="text-xs text-gray-500 hover:text-gray-700"
+              className="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
             >
               ✕ Tutup
             </button>
@@ -224,7 +224,7 @@ export default function ClientAnalytics() {
           <div className="mb-4">
             <ResponsiveContainer width="100%" height={180}>
               <AreaChart data={clientYearData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" />
                 <XAxis dataKey="tahun" tick={{ fontSize: 11 }} />
                 <YAxis
                   tickFormatter={(v) => `${(v / 1e6).toFixed(0)}jt`}
@@ -236,7 +236,7 @@ export default function ClientAnalytics() {
                 <Area
                   type="monotone"
                   dataKey="Revenue"
-                  fill="#FEE2E2"
+                  fill="rgba(227, 30, 36, 0.15)"
                   stroke="#E31E24"
                   strokeWidth={2}
                 />

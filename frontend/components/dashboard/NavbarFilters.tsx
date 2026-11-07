@@ -114,8 +114,8 @@ export default function NavbarFilters() {
           }
           className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium border transition shadow-2xs focus:outline-none ${
             isYearFiltered
-              ? "border-red-300 bg-red-50 text-telkom-red font-semibold"
-              : "border-gray-200 bg-white text-gray-700 hover:bg-gray-50 hover:border-gray-300"
+              ? "border-red-300 dark:border-red-900/60 bg-red-50 dark:bg-red-950/40 text-telkom-red font-semibold"
+              : "border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1A1D26] text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600"
           }`}
           aria-expanded={openDropdown === "year"}
           aria-label="Filter Tahun"
@@ -123,7 +123,7 @@ export default function NavbarFilters() {
           {/* Calendar icon */}
           <svg
             className={`w-3.5 h-3.5 ${
-              isYearFiltered ? "text-telkom-red" : "text-gray-400"
+              isYearFiltered ? "text-telkom-red" : "text-gray-400 dark:text-gray-400"
             }`}
             fill="none"
             viewBox="0 0 24 24"
@@ -136,12 +136,12 @@ export default function NavbarFilters() {
               d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
             />
           </svg>
-          <span className="text-gray-400 font-normal">Tahun:</span>
+          <span className="text-gray-400 dark:text-gray-400 font-normal">Tahun:</span>
           <span className="max-w-[70px] truncate">{yearLabel}</span>
           <svg
             className={`w-3 h-3 transition-transform ${
               openDropdown === "year" ? "rotate-180" : ""
-            } ${isYearFiltered ? "text-telkom-red" : "text-gray-400"}`}
+            } ${isYearFiltered ? "text-telkom-red" : "text-gray-400 dark:text-gray-400"}`}
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -156,9 +156,9 @@ export default function NavbarFilters() {
         </button>
 
         {openDropdown === "year" && (
-          <div className="absolute right-0 sm:left-0 sm:right-auto mt-1.5 w-48 bg-white border border-gray-200 rounded-xl shadow-xl z-50 p-1.5 text-xs">
-            <div className="flex items-center justify-between px-2 py-1 border-b border-gray-100 mb-1">
-              <span className="font-semibold text-gray-700">Pilih Tahun</span>
+          <div className="absolute right-0 sm:left-0 sm:right-auto mt-1.5 w-48 bg-white dark:bg-[#1A1D26] border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl z-50 p-1.5 text-xs text-gray-700 dark:text-gray-200">
+            <div className="flex items-center justify-between px-2 py-1 border-b border-gray-100 dark:border-gray-800 mb-1">
+              <span className="font-semibold text-gray-700 dark:text-gray-200">Pilih Tahun</span>
               {isYearFiltered && (
                 <button
                   type="button"
@@ -176,8 +176,8 @@ export default function NavbarFilters() {
                 onClick={() => setFilters({ ...filters, years: [] })}
                 className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-left transition ${
                   !isYearFiltered
-                    ? "bg-red-50 text-telkom-red font-semibold"
-                    : "text-gray-700 hover:bg-gray-50"
+                    ? "bg-red-50 dark:bg-red-950/40 text-telkom-red font-semibold"
+                    : "text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800/70"
                 }`}
               >
                 <span>Semua Tahun</span>
@@ -207,8 +207,8 @@ export default function NavbarFilters() {
                     onClick={() => toggleYear(y)}
                     className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-left transition ${
                       selected
-                        ? "bg-red-50 text-telkom-red font-semibold"
-                        : "text-gray-700 hover:bg-gray-50"
+                        ? "bg-red-50 dark:bg-red-950/40 text-telkom-red font-semibold"
+                        : "text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800/70"
                     }`}
                   >
                     <span>{y}</span>
@@ -216,7 +216,7 @@ export default function NavbarFilters() {
                       type="checkbox"
                       checked={selected}
                       readOnly
-                      className="rounded border-gray-300 text-telkom-red focus:ring-telkom-red pointer-events-none"
+                      className="rounded border-gray-300 dark:border-gray-600 text-telkom-red focus:ring-telkom-red dark:bg-gray-700 pointer-events-none"
                     />
                   </button>
                 );
@@ -233,8 +233,8 @@ export default function NavbarFilters() {
           onClick={() => setOpenDropdown(openDropdown === "lab" ? null : "lab")}
           className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium border transition shadow-2xs focus:outline-none ${
             isLabFiltered
-              ? "border-red-300 bg-red-50 text-telkom-red font-semibold"
-              : "border-gray-200 bg-white text-gray-700 hover:bg-gray-50 hover:border-gray-300"
+              ? "border-red-300 dark:border-red-900/60 bg-red-50 dark:bg-red-950/40 text-telkom-red font-semibold"
+              : "border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1A1D26] text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600"
           }`}
           aria-expanded={openDropdown === "lab"}
           aria-label="Filter Laboratorium"
@@ -242,7 +242,7 @@ export default function NavbarFilters() {
           {/* Lab/Beaker icon */}
           <svg
             className={`w-3.5 h-3.5 ${
-              isLabFiltered ? "text-telkom-red" : "text-gray-400"
+              isLabFiltered ? "text-telkom-red" : "text-gray-400 dark:text-gray-400"
             }`}
             fill="none"
             viewBox="0 0 24 24"
@@ -255,12 +255,12 @@ export default function NavbarFilters() {
               d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
             />
           </svg>
-          <span className="text-gray-400 font-normal">Lab:</span>
+          <span className="text-gray-400 dark:text-gray-400 font-normal">Lab:</span>
           <span className="max-w-[75px] truncate">{labLabel}</span>
           <svg
             className={`w-3 h-3 transition-transform ${
               openDropdown === "lab" ? "rotate-180" : ""
-            } ${isLabFiltered ? "text-telkom-red" : "text-gray-400"}`}
+            } ${isLabFiltered ? "text-telkom-red" : "text-gray-400 dark:text-gray-400"}`}
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -275,9 +275,9 @@ export default function NavbarFilters() {
         </button>
 
         {openDropdown === "lab" && (
-          <div className="absolute right-0 sm:left-0 sm:right-auto mt-1.5 w-52 bg-white border border-gray-200 rounded-xl shadow-xl z-50 p-1.5 text-xs">
-            <div className="flex items-center justify-between px-2 py-1 border-b border-gray-100 mb-1">
-              <span className="font-semibold text-gray-700">Pilih Laboratorium</span>
+          <div className="absolute right-0 sm:left-0 sm:right-auto mt-1.5 w-52 bg-white dark:bg-[#1A1D26] border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl z-50 p-1.5 text-xs text-gray-700 dark:text-gray-200">
+            <div className="flex items-center justify-between px-2 py-1 border-b border-gray-100 dark:border-gray-800 mb-1">
+              <span className="font-semibold text-gray-700 dark:text-gray-200">Pilih Laboratorium</span>
               {isLabFiltered && (
                 <button
                   type="button"
@@ -295,8 +295,8 @@ export default function NavbarFilters() {
                 onClick={() => setFilters({ ...filters, labs: [] })}
                 className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-left transition ${
                   !isLabFiltered
-                    ? "bg-red-50 text-telkom-red font-semibold"
-                    : "text-gray-700 hover:bg-gray-50"
+                    ? "bg-red-50 dark:bg-red-950/40 text-telkom-red font-semibold"
+                    : "text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800/70"
                 }`}
               >
                 <span>Semua Lab</span>
@@ -326,8 +326,8 @@ export default function NavbarFilters() {
                     onClick={() => toggleLab(lab)}
                     className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-left transition ${
                       selected
-                        ? "bg-red-50 text-telkom-red font-semibold"
-                        : "text-gray-700 hover:bg-gray-50"
+                        ? "bg-red-50 dark:bg-red-950/40 text-telkom-red font-semibold"
+                        : "text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800/70"
                     }`}
                   >
                     <span className="truncate">{lab}</span>
@@ -335,7 +335,7 @@ export default function NavbarFilters() {
                       type="checkbox"
                       checked={selected}
                       readOnly
-                      className="rounded border-gray-300 text-telkom-red focus:ring-telkom-red pointer-events-none"
+                      className="rounded border-gray-300 dark:border-gray-600 text-telkom-red focus:ring-telkom-red dark:bg-gray-700 pointer-events-none"
                     />
                   </button>
                 );
@@ -354,8 +354,8 @@ export default function NavbarFilters() {
           }
           className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium border transition shadow-2xs focus:outline-none ${
             isClientFiltered
-              ? "border-red-300 bg-red-50 text-telkom-red font-semibold"
-              : "border-gray-200 bg-white text-gray-700 hover:bg-gray-50 hover:border-gray-300"
+              ? "border-red-300 dark:border-red-900/60 bg-red-50 dark:bg-red-950/40 text-telkom-red font-semibold"
+              : "border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1A1D26] text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600"
           }`}
           aria-expanded={openDropdown === "client"}
           aria-label="Filter Tipe Klien"
@@ -363,7 +363,7 @@ export default function NavbarFilters() {
           {/* Building/Client icon */}
           <svg
             className={`w-3.5 h-3.5 ${
-              isClientFiltered ? "text-telkom-red" : "text-gray-400"
+              isClientFiltered ? "text-telkom-red" : "text-gray-400 dark:text-gray-400"
             }`}
             fill="none"
             viewBox="0 0 24 24"
@@ -376,12 +376,12 @@ export default function NavbarFilters() {
               d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
             />
           </svg>
-          <span className="text-gray-400 font-normal">Klien:</span>
+          <span className="text-gray-400 dark:text-gray-400 font-normal">Klien:</span>
           <span className="max-w-[70px] truncate">{clientLabel}</span>
           <svg
             className={`w-3 h-3 transition-transform ${
               openDropdown === "client" ? "rotate-180" : ""
-            } ${isClientFiltered ? "text-telkom-red" : "text-gray-400"}`}
+            } ${isClientFiltered ? "text-telkom-red" : "text-gray-400 dark:text-gray-400"}`}
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -396,8 +396,8 @@ export default function NavbarFilters() {
         </button>
 
         {openDropdown === "client" && (
-          <div className="absolute right-0 mt-1.5 w-44 bg-white border border-gray-200 rounded-xl shadow-xl z-50 p-1.5 text-xs">
-            <div className="px-2 py-1 border-b border-gray-100 mb-1 font-semibold text-gray-700">
+          <div className="absolute right-0 mt-1.5 w-44 bg-white dark:bg-[#1A1D26] border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl z-50 p-1.5 text-xs text-gray-700 dark:text-gray-200">
+            <div className="px-2 py-1 border-b border-gray-100 dark:border-gray-800 mb-1 font-semibold text-gray-700 dark:text-gray-200">
               Tipe Klien
             </div>
             <div className="space-y-0.5">
@@ -410,8 +410,8 @@ export default function NavbarFilters() {
                     onClick={() => setClient(opt.value)}
                     className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-left transition ${
                       active
-                        ? "bg-red-50 text-telkom-red font-semibold"
-                        : "text-gray-700 hover:bg-gray-50"
+                        ? "bg-red-50 dark:bg-red-950/40 text-telkom-red font-semibold"
+                        : "text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800/70"
                     }`}
                   >
                     <span>{opt.label}</span>
@@ -444,7 +444,7 @@ export default function NavbarFilters() {
           type="button"
           onClick={resetFilters}
           title="Reset semua filter"
-          className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-semibold text-red-500 hover:text-red-700 hover:bg-red-50 transition border border-transparent hover:border-red-200"
+          className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-semibold text-red-500 hover:text-red-700 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 transition border border-transparent hover:border-red-200 dark:hover:border-red-900/60"
         >
           <svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
             <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
